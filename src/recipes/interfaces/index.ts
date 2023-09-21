@@ -1,0 +1,1 @@
+export { RECIPES_DIFFICULTY } from './recipes-dificult.enum';
