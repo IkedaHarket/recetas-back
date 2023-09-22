@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, MaxLength, MinLength } from "class-validator";
+import { IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 import { IsValidDifficulty } from "../decorators";
 
 export class CreateRecipeDto {
@@ -27,4 +27,9 @@ export class CreateRecipeDto {
     @IsString()
     @MinLength(50, { message: 'La descripcion debe tener un minimo de 50 caracteres' })
     description:string;
+
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    image?:string;
 }

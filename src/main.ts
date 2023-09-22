@@ -5,6 +5,8 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  
+  app.enableCors();
   app.setGlobalPrefix('api');
   
   app.useGlobalPipes(
@@ -15,6 +17,7 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('Recetas API')
     .setDescription('Recetas Endpoints')
     .setVersion('1.0')

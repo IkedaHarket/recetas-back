@@ -23,6 +23,7 @@ import { User } from './entities';
         signOptions:{ expiresIn:'2h' }
       })
     })
-  ]
+  ],
+  exports:[ JwtStrategy, PassportModule, JwtModule ]
 })
 export class AuthModule {}

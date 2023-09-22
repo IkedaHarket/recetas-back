@@ -1,6 +1,7 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { AUTH_ROLES } from "../interfaces";
 import { IMAGES_DEFAULT } from "src/common/interfaces";
+import { Recipe } from "src/recipes/entities";
 
 @Entity('users')
 export class User {
@@ -25,6 +26,12 @@ export class User {
 
     @Column('text', { default: IMAGES_DEFAULT.USER_PROFILE })
     image:string
+
+    @OneToMany( 
+        () => Recipe,
+        recipe => recipe.user
+    )
+    recipe: Recipe
 
     @BeforeInsert()
     checkFieldsBeforeInsert(){
