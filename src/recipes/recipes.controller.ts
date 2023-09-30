@@ -37,7 +37,7 @@ export class RecipesController {
     @Body() updateRecipeDto: UpdateRecipeDto,
     @GetUser() user: User,
     ) {
-    return this.recipesService.update(id, updateRecipeDto);
+    return this.recipesService.update(id, updateRecipeDto, user);
   }
 
   @Auth(AUTH_ROLES.USER_ROLE)
@@ -46,6 +46,6 @@ export class RecipesController {
     @Param('id') id: string,
     @GetUser() user: User,
     ) {
-    return this.recipesService.remove(id);
+    return this.recipesService.remove(id, user);
   }
 }

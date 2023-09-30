@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -58,9 +58,13 @@ export class RecipesService {
     return recipes;
   }
 
-  async update(id: string, updateRecipeDto: UpdateRecipeDto) {
+  async update(id: string, updateRecipeDto: UpdateRecipeDto, user: User) {
 
+    const oldRecipe = await this.find(id);
     const recipe = await this.recipeRepository.preload({ id, ...updateRecipeDto})
+    
+    if(oldRecipe[0].user.id !== user.id) throw new ForbiddenException('No tienes permiso de realizar esta accion')
+
     if(!recipe) throw new NotFoundException(`No se encontro receta con el id ${id}`)
 
     const queryRunner = this.datasource.createQueryRunner()
@@ -80,13 +84,12 @@ export class RecipesService {
     }
   }
 
-  async remove(id: string) {
-    try {
-      const recipe = await this.find( id )
-      await this.recipeRepository.remove( recipe[0] )
-    } catch (error) {
-      this.handleDBErrors(error)
-    }
+  async remove(recipeId: string, user: User) {
+    const recipe = await this.find( recipeId )
+    if(recipe[0].user.id !== user.id) throw new ForbiddenException('No tienes permiso de realizar esta accion')
+
+    await this.recipeRepository.update({ id: recipeId }, { ...recipe[0], isActive: false } )
+
   }
 
   private handleDBErrors(error:any): never {

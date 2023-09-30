@@ -2,7 +2,10 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { RecipesModule } from './recipes/recipes.module';
+import { FilesModule } from './files/files.module';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -17,8 +20,12 @@ import { RecipesModule } from './recipes/recipes.module';
       autoLoadEntities:true, 
       synchronize:true
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname,'..','public'), 
+    }),
     AuthModule,
-    RecipesModule
+    RecipesModule,
+    FilesModule
   ]
 })
 export class AppModule {}
